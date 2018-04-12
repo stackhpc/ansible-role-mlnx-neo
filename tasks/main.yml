@@ -1,0 +1,7 @@
+---
+- name: Fail if the image is not defined
+  fail:
+    msg: Mellanox NEO Docker image must be defined via 'mlnx_neo_image'.
+  when: mlnx_neo_image is none
+
+- include: "{{ mlnx_neo_action }}.yml"

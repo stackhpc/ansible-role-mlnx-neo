@@ -1,0 +1,30 @@
+---
+# Roughly follows kolla-ansible's service deployment patterns.
+
+# Action to perform. One of 'deploy', 'destroy', 'pull', 'reconfigure',
+# 'upgrade'.
+mlnx_neo_action: deploy
+
+# Whether NEO is enabled.
+mlnx_neo_enabled: true
+
+# Service deployment definition.
+mlnx_neo_services:
+  mlnx_neo:
+    container_name: mlnx_neo
+    enabled: "{{ mlnx_neo_enabled }}"
+    image: "{{ mlnx_neo_image_full }}"
+    privileged: True
+    volumes:
+      - "/dev/log:/dev/log"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+# Image used to create the container.
+mlnx_neo_image:
+mlnx_neo_tag: "latest"
+mlnx_neo_image_full: "{{ mlnx_neo_image }}:{{ mlnx_neo_tag }}"
+
+# Container restart policy.
+mlnx_neo_restart_policy: "unless-stopped"
+mlnx_neo_restart_retries: 10

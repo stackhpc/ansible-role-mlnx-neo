@@ -1,0 +1,10 @@
+---
+- name: Pulling NEO container image
+  docker_image:
+    name: "{{ item.value.image }}"
+    repository: "{{ item.value.image }}"
+    state: present
+  with_dict: "{{ mlnx_neo_services }}"
+  when:
+    - item.value.enabled
+    - mlnx_neo_action != 'destroy'
