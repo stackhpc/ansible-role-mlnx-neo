@@ -1,0 +1,18 @@
+---
+- name: Ensure configuration directory exists
+  file:
+    path: "{{ mlnx_neo_config_path }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  become: true
+
+- name: Ensure configuration script is copied
+  template:
+    src: "{{ mlnx_neo_startup_config_path }}"
+    dest: "{{ mlnx_neo_config_path }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  become: true

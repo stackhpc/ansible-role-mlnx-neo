@@ -27,6 +27,11 @@ Role Variables
 * ``mlnx_neo_restart_policy``: Docker restart policy for the NEO container.
   Defaults to ``unless-stopped``.
 * ``mlnx_neo_restart_retries``: Number of Docker restarts. Defaults to 10.
+* ``mlnx_neo_startup_config_path``: Path to a script template on localhost
+  containing startup configuration. Default is
+  ``/etc/mlnx-neo/mlnx-neo-configure``.
+* ``mlnx_neo_config_path``: Path to a directory on the remote host to store
+  configuration.  Default is ``/etc/mlnx-neo``.
 
 Dependencies
 ------------

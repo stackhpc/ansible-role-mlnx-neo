@@ -14,11 +14,20 @@ mlnx_neo_services:
     container_name: mlnx_neo
     enabled: "{{ mlnx_neo_enabled }}"
     image: "{{ mlnx_neo_image_full }}"
-    privileged: True
+    network_mode: host
+    privileged: true
+    # Ideally we'd define these tmpfs mounts, but the tmpfs argument is not
+    # supported by the docker_container Ansible module until Ansible 2.4.
+    #tmpfs:
+    #  - "/run"
+    #  - "/tmp"
     volumes:
-      - "/dev/log:/dev/log"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "{{ mlnx_neo_config_path }}/mlnx-neo-configure:/usr/bin/mlnx-neo-configure:ro"
+      - "mlnx_neo_common_conf:/opt/neo/files/common/conf"
+      - "mlnx_neo_controller_conf:/opt/neo/files/controller/conf"
+      - "mlnx_neo_files:/opt/neo/files"
+      - "mlnx_neo_controller_logs:/opt/neo/files/controller/log"
 
 # Image used to create the container.
 mlnx_neo_image:
@@ -28,3 +37,9 @@ mlnx_neo_image_full: "{{ mlnx_neo_image }}:{{ mlnx_neo_tag }}"
 # Container restart policy.
 mlnx_neo_restart_policy: "unless-stopped"
 mlnx_neo_restart_retries: 10
+
+# Path to a script template on localhost containing NEO startup configuration.
+mlnx_neo_startup_config_path: "/etc/mlnx-neo/mlnx-neo-configure"
+
+# Path to a directory on the remote host to store configuration.
+mlnx_neo_config_path: "/etc/mlnx-neo"
