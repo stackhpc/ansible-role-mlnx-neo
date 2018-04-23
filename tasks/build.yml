@@ -1,0 +1,24 @@
+---
+- name: Fail if the NEO tarball URL is not defined
+  fail:
+    msg: >
+      The NEO software tarball URL must be configured via
+      'mlnx_neo_tarball_url'.
+  when: mlnx_neo_tarball_url is none
+
+- name: Ensure the git repository is cloned
+  git:
+    repo: "{{ item.value.repo.url }}"
+    version: "{{ item.value.repo.version }}"
+    dest: "{{ mlnx_neo_repo_checkout_path }}/{{ item.value.repo.url | basename }}"
+  with_dict: "{{ mlnx_neo_images }}"
+
+- name: Ensure image is built
+  docker_image:
+    buildargs: "{{ item.value.buildargs | default(omit) }}"
+    force: "{{ mlnx_neo_force_rebuild }}"
+    name: "{{ item.value.name }}"
+    path: "{{ mlnx_neo_repo_checkout_path }}/{{ item.value.repo.url | basename }}"
+    push: "{{ mlnx_neo_push }}"
+    state: present
+  with_dict: "{{ mlnx_neo_images }}"

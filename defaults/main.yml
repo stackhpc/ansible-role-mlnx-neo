@@ -1,8 +1,8 @@
 ---
 # Roughly follows kolla-ansible's service deployment patterns.
 
-# Action to perform. One of 'deploy', 'destroy', 'pull', 'reconfigure',
-# 'upgrade'.
+# Action to perform. One of 'build', 'deploy', 'destroy', 'pull',
+# 'reconfigure', 'upgrade'.
 mlnx_neo_action: deploy
 
 # Whether NEO is enabled.
@@ -43,3 +43,33 @@ mlnx_neo_startup_config_path: "/etc/mlnx-neo/mlnx-neo-configure"
 
 # Path to a directory on the remote host to store configuration.
 mlnx_neo_config_path: "/etc/mlnx-neo"
+
+# The following variables are relevant only when 'mlnx_neo_action' is 'build':
+
+# Service image definition.
+mlnx_neo_images:
+  mlnx-neo:
+    name: "{{ mlnx_neo_image_full }}"
+    buildargs:
+      neo_tarball_url: "{{ mlnx_neo_tarball_url }}"
+    repo:
+      url: "{{ mlnx_neo_repo_url }}"
+      version: "{{ mlnx_neo_repo_version }}"
+
+# URL of the git repo containing the image.
+mlnx_neo_repo_url: "https://github.com/stackhpc/docker-mlnx-neo"
+
+# Version to check out for the git repo containing the image.
+mlnx_neo_repo_version: master
+
+# Path to a directory in which to check out the git repo.
+mlnx_neo_repo_checkout_path: /tmp
+
+# URL of the NEO software tarball.
+mlnx_neo_tarball_url:
+
+# Whether to push images after they have been built.
+mlnx_neo_push: false
+
+# Whether to build the image even if an image of the same name and tag exists.
+mlnx_neo_force_rebuild: false
